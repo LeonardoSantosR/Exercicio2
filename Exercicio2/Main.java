@@ -21,10 +21,10 @@ public class Main {
     					Util.cadastrar();
     					break;
     				case 2:
-    					Util.pesquisar();
+    					Util.Pesquisar();
     					break;
     				case 3:
-    					Util.vender();
+    					Util.Vender();
     					break;
     			
     				}

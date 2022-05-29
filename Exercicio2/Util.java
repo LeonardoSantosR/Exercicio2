@@ -11,8 +11,8 @@ import static java.lang.Integer.parseInt;
 
 	 	public class Util {
 
-	// array para armazenar os objetos Atleta
-	private static Produto[] Produto = new Produto[5];
+	// array para armazenar os objetos Prodtudo
+	 		 static Lista<Produto> ProdutosL= new Lista<Produto>();
 
 	// variavel para controlar as posições do array
 	private static int posicao = 0;
@@ -28,63 +28,75 @@ import static java.lang.Integer.parseInt;
 	}
 
 	public static void cadastrar() {
-			String titulo;
-			int pontuação;
-			int ano;
-			String genero;
-		
+			String Nome;
+			int Quantidade;
+			String validade;
+			
+			Nome=JOptionPane.showInputDialog("Nome do produto::");
+			validade=JOptionPane.showInputDialog("Insira validade nesse modelo (MM/DD/AAAA):");
+		    Quantidade=Integer.parseInt(JOptionPane.showInputDialog("Insira a quantidade do produto:"));
+		        if(Quantidade<=0){
+		            JOptionPane.showMessageDialog(null, "O Produto precisa de estoque");
+		        }else{
+		        Produto produto=new Produto(Nome, Quantidade,validade  );
+		        if(ProdutosL.pesquisar(produto)!=null){
+		            JOptionPane.showMessageDialog(null, "Este produto já está no sistema");
+		        } else {
+		        	ProdutosL.inserir(produto);
+		            JOptionPane.showMessageDialog(null, "Cadastrado com sucesso :)");
+		        }
+		    }
+		    }
 	
-	if(posicao < Produto.length) {
-		Produto = showInputDialog("titulo");
-		pontuação = parseInt(showInputDialog("pontuação"));
-		ano = parseInt(showInputDialog("ano"));
-		genero = showInputDialog("genero");	
-		Produto[posicao] = new Produto(titulo , pontuação, ano, genero);
-		posicao++;
-	} else {
-		showInternalMessageDialog(null, "Entre em contato com a clínica");
-	}
-		
-	}
-    
-	// método auxiliar para pesquisar um atleta pelo nome
-	private static int buscar() {
-		int index = -1;
-		String titulo = JOptionPane.showInputDialog("titulo");
-		for(int i = 0; i < posicao ; i++) {
-			if(Produto[i].titulo.equalsIgnoreCase(titulo)) {
-				index = 1;
-			}
-		}
-		if(index == -1){
-			showMessageDialog(null, titulo + "Não encontrado(a)");
-		}
-		return index;
-	}
+	public static void Pesquisar() {
 
-	public static void pesquisar() {
-          int index = buscar();
-          if (index != -1) {
-        	  showMessageDialog(null, Filme[index].getDados());
-          }
-		
-	}
+        Lista<Produto> copia= new Lista<Produto>();
+        No<Produto> aux=ProdutosL.inicio;
+        while(aux!=null){
+            copia.inserir(aux.dado);
+            aux=aux.dir;
+        }
 
-	public static void excluir() {
-	     int index = buscar();
-		if(index != -1) {
-			for(int i = index; i < posicao; i++) {
-				Filme[i] = Filme[i + 1];	
-			}
-			posicao--;	
-		}
-	}
+        for(int i=0; i<ProdutosL.total;i++){
+            aux=copia.inicio; 
+            No<Produto> aux2=aux.dir;      
+            while(aux2!=null){
+                if(aux.dado.getValidade().compareTo(aux.dir.dado.getValidade())>=0){
+                    aux=aux2;
+                }      
+                aux2=aux2.dir;
+            }
+        
+            JOptionPane.showMessageDialog(null, aux.dado.toString());
+            copia.remover(aux.dado);
+        }
 
-	
+        
+    }
+	public static void Vender() {
+        int valor;
+        No<Produto> aux=ProdutosL.inicio;
+        String nome;
+        boolean achou=false;
 
+        nome=JOptionPane.showInputDialog("Insira o nome do produto");
+        while(aux!=null){
+        if(aux.dado.getNome().equalsIgnoreCase(nome)){
+            Produto produto=aux.dado;
+            valor=Integer.parseInt(JOptionPane.showInputDialog("Insira a quantidade a ser vendida:"));
+            produto.Venda(valor);
+            if(produto.getQuantidade()==0){
+            	ProdutosL.remover(produto);
+            }
+            achou=true;
+            break;
+        }
+        aux=aux.dir;
+    }
+        if(achou==false){
+            JOptionPane.showMessageDialog(null, "Este produto não foi cadastrado ou esgotou");
+        }
 
-	public static void vender() {
-		// TODO Auto-generated method stub
-		
-	}
+        
+    }
 	 	}
